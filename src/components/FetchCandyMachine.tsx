@@ -5,12 +5,11 @@ import { FC, useEffect, useState } from "react"
 import styles from "../styles/custom.module.css"
 
 export const FetchCandyMachine: FC = () => {
-  const [candyMachineAddress, setCandyMachineAddress] = useState(
-    "9tQLFyLeaUwQ1PN2YDiFztZDxu4KT6px8CBYEapkshAD"
-  )
+  const [candyMachineAddress, setCandyMachineAddress] = useState(null)
   const [candyMachineData, setCandyMachineData] = useState(null)
   const [pageItems, setPageItems] = useState(null)
   const [page, setPage] = useState(1)
+
 
   const { connection } = useConnection()
   const metaplex = Metaplex.make(connection)
@@ -61,23 +60,12 @@ export const FetchCandyMachine: FC = () => {
     }
   }
 
-  // next page
-  const next = async () => {
-    setPage(page + 1)
-  }
 
-  // fetch placeholder candy machine on load
-  useEffect(() => {
-    fetchCandyMachine()
-  }, [])
+  const getPage = async (page, perPage) => {}
 
-  // fetch metadata for NFTs when page or candy machine changes
-  useEffect(() => {
-    if (!candyMachineData) {
-      return
-    }
-    getPage(page, 9)
-  }, [candyMachineData, page])
+  const prev = async () => {}
+
+  const next = async () => {}
 
   return (
     <div>

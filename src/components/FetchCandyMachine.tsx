@@ -10,7 +10,56 @@ export const FetchCandyMachine: FC = () => {
   const [pageItems, setPageItems] = useState(null)
   const [page, setPage] = useState(1)
 
-  const fetchCandyMachine = async () => {}
+
+  const { connection } = useConnection()
+  const metaplex = Metaplex.make(connection)
+
+  // fetch candymachine by address
+  const fetchCandyMachine = async () => {
+    // reset page to 1
+    setPage(1)
+
+    // fetch candymachine data
+    try {
+      const candyMachine = await metaplex
+        .candyMachines()
+        .findByAddress({ address: new PublicKey(candyMachineAddress) })
+        .run()
+
+      setCandyMachineData(candyMachine)
+    } catch (e) {
+      alert("Please submit a valid CMv2 address.")
+    }
+  }
+
+  // paging
+  const getPage = async (page, perPage) => {
+    const pageItems = candyMachineData.items.slice(
+      (page - 1) * perPage,
+      page * perPage
+    )
+
+    // fetch metadata of NFTs for page
+    let nftData = []
+    for (let i = 0; i < pageItems.length; i++) {
+      let fetchResult = await fetch(pageItems[i].uri)
+      let json = await fetchResult.json()
+      nftData.push(json)
+    }
+
+    // set state
+    setPageItems(nftData)
+  }
+
+  // previous page
+  const prev = async () => {
+    if (page - 1 < 1) {
+      setPage(1)
+    } else {
+      setPage(page - 1)
+    }
+  }
+
 
   const getPage = async (page, perPage) => {}
 
